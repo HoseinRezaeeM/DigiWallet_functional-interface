@@ -17,6 +17,6 @@ public class AdminWalletService extends WalletService {
     }
 
     public List<Transaction> getAllTransactions() {
-        return null;
+        return transactionRepository.getAll();
     }
 }
