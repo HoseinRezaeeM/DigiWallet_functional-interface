@@ -28,12 +28,12 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     @Override
     public List<Transaction> get(Long aLong) {
-        return transactionList.stream().filter((a)->a.getId().equals(aLong)).collect(Collectors.toList());
+        return transactionList.stream().filter((a) -> a.getId().equals(aLong)).collect(Collectors.toList());
     }
 
     @Override
     public List<Transaction> get(Predicate<Transaction> predicate) {
-
+        return transactionList.stream().filter(predicate).collect(Collectors.toList());
 
     }
 }
