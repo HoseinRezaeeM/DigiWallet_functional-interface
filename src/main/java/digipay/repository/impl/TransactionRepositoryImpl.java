@@ -13,13 +13,16 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     public final static List<Transaction> transactionList = new ArrayList<>();
 
     @Override
-    public boolean add(Transaction transaction) {
-        transactionList.add(transaction);
-        if (transactionList.contains(transaction)) {
+    public boolean add(Transaction transaction) throws IllegalArgumentException{
+        if(transaction.getAmount().longValue()<=0){
+            throw new IllegalArgumentException();
+        }if (transactionList.contains(transaction)){
             return false;
-        } else
-            return true;
+        }else
+            transactionList.add(transaction);
+        return true;
     }
+
 
     @Override
     public List<Transaction> getAll() {

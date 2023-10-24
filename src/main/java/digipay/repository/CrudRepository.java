@@ -10,7 +10,7 @@ public interface CrudRepository<T extends Transaction, ID extends Long> {
 
     List<T> getAll();
 
-    T get(ID id);
+    List<T> get(ID id);
 
     List<T> get(Predicate<T> predicate);
 
