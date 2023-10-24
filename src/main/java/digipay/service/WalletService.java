@@ -3,11 +3,13 @@ package digipay.service;
 import digipay.model.Transaction;
 import digipay.model.enumeration.TransactionStatus;
 import digipay.model.Wallet;
+import digipay.model.enumeration.TransactionType;
 import digipay.repository.impl.TransactionRepositoryImpl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -20,7 +22,9 @@ public class WalletService {
     }
 
     public List<Transaction> getTransactions(Wallet wallet) {
-        return transactionRepository.getAll().stream().filter((a) -> a.getWallet().equals(wallet)).collect(Collectors.toList());
+        return transactionRepository.getAll().stream().
+                filter((a) -> a.getWallet().equals(wallet)).
+                collect(Collectors.toList());
     }
 
     public void getTransactions(Wallet wallet, Predicate<Transaction> predicate) {
@@ -31,7 +35,18 @@ public class WalletService {
     }
 
     public BigDecimal getBalance(Wallet wallet) {
-        return null;
+        final Optional<BigDecimal> reduceDeposit = transactionRepository.getAll().stream()
+                .filter((a) -> a.getWallet().equals(wallet))
+                .filter((a) -> a.getStatus().equals(TransactionStatus.ACCEPTED))
+                .filter((a)->a.getType().equals(TransactionType.DEPOSIT))
+                .map(Transaction::getAmount).reduce(BigDecimal::add);
+
+        final Optional<BigDecimal> reduceWidthraw = transactionRepository.getAll().stream()
+                .filter((a) -> a.getWallet().equals(wallet))
+                .filter((a) -> a.getStatus().equals(TransactionStatus.ACCEPTED))
+                .filter((a)->a.getType().equals(TransactionType.WITHDRAWAL))
+                .map(Transaction::getAmount).reduce(BigDecimal::add);
+        return reduceDeposit.get().subtract(reduceWidthraw.get());
     }
 
     public boolean setTransactionStatus(Transaction transaction, TransactionStatus status) {
