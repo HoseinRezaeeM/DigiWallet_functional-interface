@@ -28,7 +28,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     @Override
     public List<Transaction> get(Long aLong) {
-
+        return transactionList.stream().filter((a)->a.getId().equals(aLong)).collect(Collectors.toList());
     }
 
     @Override
