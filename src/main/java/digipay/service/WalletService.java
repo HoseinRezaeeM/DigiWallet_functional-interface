@@ -34,19 +34,29 @@ public class WalletService {
                 .forEach(System.out::println);
     }
 
+
     public BigDecimal getBalance(Wallet wallet) {
         final Optional<BigDecimal> reduceDeposit = transactionRepository.getAll().stream()
                 .filter((a) -> a.getWallet().equals(wallet))
                 .filter((a) -> a.getStatus().equals(TransactionStatus.ACCEPTED))
-                .filter((a)->a.getType().equals(TransactionType.DEPOSIT))
+                .filter((a) -> a.getType().equals(TransactionType.DEPOSIT))
                 .map(Transaction::getAmount).reduce(BigDecimal::add);
 
         final Optional<BigDecimal> reduceWidthraw = transactionRepository.getAll().stream()
                 .filter((a) -> a.getWallet().equals(wallet))
                 .filter((a) -> a.getStatus().equals(TransactionStatus.ACCEPTED))
-                .filter((a)->a.getType().equals(TransactionType.WITHDRAWAL))
+                .filter((a) -> a.getType().equals(TransactionType.WITHDRAWAL))
                 .map(Transaction::getAmount).reduce(BigDecimal::add);
-        return reduceDeposit.get().subtract(reduceWidthraw.get());
+        BigDecimal subtract=null;
+        if (reduceWidthraw.isPresent()) {
+            if (reduceDeposit.isPresent()) {
+                subtract = reduceDeposit.get().subtract(reduceWidthraw.get());
+                if (subtract.intValue()<0){
+                    throw new IllegalArgumentException();
+                }
+            }
+        }
+       return  subtract;
     }
 
     public boolean setTransactionStatus(Transaction transaction, TransactionStatus status) {
