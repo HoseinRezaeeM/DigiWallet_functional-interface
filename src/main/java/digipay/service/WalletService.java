@@ -20,11 +20,14 @@ public class WalletService {
     }
 
     public List<Transaction> getTransactions(Wallet wallet) {
-        return transactionRepository.getAll().stream().filter((a)->a.getWallet().equals(wallet)).collect(Collectors.toList()) ;
+        return transactionRepository.getAll().stream().filter((a) -> a.getWallet().equals(wallet)).collect(Collectors.toList());
     }
 
     public void getTransactions(Wallet wallet, Predicate<Transaction> predicate) {
-
+        transactionRepository.getAll().stream()
+                .filter((a) -> a.getWallet().equals(wallet))
+                .filter(predicate).collect(Collectors.toList())
+                .forEach(System.out::println);
     }
 
     public BigDecimal getBalance(Wallet wallet) {
