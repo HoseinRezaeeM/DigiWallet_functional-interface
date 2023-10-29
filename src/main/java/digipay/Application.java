@@ -45,12 +45,7 @@ public class Application {
         transactionRepository.add(transaction5);
         transactionRepository.add(transaction6);
 
-        System.out.println(transactionRepository.getAll());
-
-        System.out.println(transactionRepository.get(new Long(2)));
-
-        Predicate<Transaction> predicate = (a) -> a.getType().equals(TransactionType.DEPOSIT);
-        System.out.println(transactionRepository.get(predicate));
+       
 
         Predicate<Transaction> transactionPredicate = (a) -> a.getWallet().equals(wallet1);
         System.out.println(adminWalletService.getTransactions(transactionPredicate));
