@@ -56,7 +56,7 @@ public class WalletService {
             if (reduceDeposit.isPresent()) {
                 subtract = reduceDeposit.get().subtract(reduceWidthraw.get());
                 if (subtract.intValue() < 0) {
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException(); //unchecked Exception
                 }
             }
         }
